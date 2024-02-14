@@ -96,44 +96,6 @@ def tobs():
 
     return jsonify(all_temp_data)
 
-@app.route("/api/v1.0/<start>")
-def start(start):
-    # Create our session (link) from Python to the DB
-    session = Session(engine)
-    start_date_tobs = session.query(func.min(Measurement.tobs), func.max(Measurement.tobs), func.avg(Measurement.tobs))\
-        .filter(Measurement.date >= start).all()
-    session.close()
-
-    start_tobs = []
-    for min, max, avg in start_date_tobs:
-        start_dict = {}
-        start_dict['min_temp'] = min
-        start_dict['max_temp'] = max
-        start_dict['avg_temp'] = round(avg, 2)
-
-        start_tobs.append(start_dict)
-
-    return jsonify (f"Start date:{start}", (start_tobs))
-
-@app.route("/api/v1.0/<start>/<end>")
-def start_end(start, end):
-    # Create our session (link) from Python to the DB
-    session = Session(engine)
-    start_end_date_tobs = session.query(func.min(Measurement.tobs), func.max(Measurement.tobs), func.avg(Measurement.tobs))\
-        .filter(Measurement.date >= start)\
-        .filter(Measurement.date<= end).all()
-    session.close()
-
-    start_end_tobs = []
-    for min, max, avg in start_end_date_tobs:
-        start_dict = {}
-        start_dict['min_temp'] = min
-        start_dict['max_temp'] = max
-        start_dict['avg_temp'] = round(avg, 2)
-
-        start_end_tobs.append(start_dict)
-
-    return jsonify (f"Start date:{start} // End date:{end}", (start_end_tobs))
 
 @app.route("/api/v1.0/temp/<start>")
 @app.route("/api/v1.0/temp/<start>/<end>")
